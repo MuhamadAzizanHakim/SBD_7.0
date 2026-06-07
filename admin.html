@@ -1,0 +1,1603 @@
+ADMIN.HTML
+
+<!doctype html>
+<html lang="id" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CucianUNP Executive Panel - Standalone Web</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@450;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "ui-sans-serif", "system-ui"],
+              mono: ["JetBrains Mono", "ui-monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .glass-card {
+        background-color: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(51, 65, 85, 0.5);
+        border-radius: 1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .glass-card:hover {
+        border-color: rgba(59, 130, 246, 0.4);
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f172a;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 99px;
+      }
+      @keyframes subtle-pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.85;
+          transform: scale(1.02);
+        }
+      }
+      .status-pulse {
+        animation: subtle-pulse 2s infinite ease-in-out;
+      }
+
+      /* ── Login overlay ── */
+      #login_overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(7, 11, 22, 0.97);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #login_overlay.hidden {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body
+    class="bg-[#0b0f19] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white font-sans"
+  >
+    <!-- ══════════════════════════════════════════
+         LOGIN OVERLAY
+    ══════════════════════════════════════════ -->
+    <div id="login_overlay">
+      <div class="glass-card p-8 w-full max-w-sm mx-4 space-y-6">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30"
+          >
+            <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-white">Login Admin</h2>
+            <p class="text-xs text-slate-400 font-mono">
+              CucianUNP Executive Panel
+            </p>
+          </div>
+        </div>
+
+        <div
+          id="login_error"
+          class="hidden p-3 bg-rose-950/40 border border-rose-800/50 rounded-xl text-xs text-rose-300 font-medium"
+        ></div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs text-slate-400 block mb-1">Email</label>
+            <input
+              id="login_email"
+              type="email"
+              placeholder="admin@example.com"
+              class="w-full bg-slate-900 border border-slate-800 focus:border-blue-500 text-sm text-white py-2.5 px-3 rounded-xl transition-all outline-none"
+            />
+          </div>
+          <div>
+            <label class="text-xs text-slate-400 block mb-1">Kata Sandi</label>
+            <input
+              id="login_password"
+              type="password"
+              placeholder="••••••••"
+              onkeydown="if (event.key === 'Enter') doLogin();"
+              class="w-full bg-slate-900 border border-slate-800 focus:border-blue-500 text-sm text-white py-2.5 px-3 rounded-xl transition-all outline-none"
+            />
+          </div>
+          <button
+            onclick="doLogin()"
+            class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-all flex items-center justify-center gap-2"
+          >
+            <i data-lucide="log-in" class="w-4 h-4"></i>
+            <span id="login_btn_text">Masuk</span>
+          </button>
+        </div>
+
+        <p class="text-[10px] text-slate-600 text-center font-mono">
+          Akses terbatas untuk operator CucianUNP
+        </p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         MAIN APP (tersembunyi sampai login)
+    ══════════════════════════════════════════ -->
+    <div id="app_wrapper" class="hidden flex-col min-h-screen">
+      <header
+        class="sticky top-0 z-40 bg-[#0f172a]/90 backdrop-blur-md border-b border-slate-800/80 px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30"
+          >
+            <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+          </div>
+          <div>
+            <h1
+              class="text-xl font-bold text-white tracking-tight flex items-center gap-2"
+            >
+              PencucianUNP Executive Panel
+            </h1>
+            <p class="text-xs text-slate-400 font-mono">
+              Real-time Vehicle Service Control Station (Connected to MySQL)
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+          <div
+            id="price_sync_toast"
+            class="hidden bg-blue-950/80 border border-blue-500/50 px-3.5 py-1.5 rounded-xl text-xs text-blue-300 font-semibold flex items-center gap-2 animate-bounce"
+          >
+            <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
+            <span>Tarif Sinkron Seketika di Pelanggan!</span>
+          </div>
+          <!-- Info admin yang sedang login -->
+          <div
+            id="admin_info"
+            class="hidden items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 text-xs"
+          >
+            <i data-lucide="user-circle" class="w-4 h-4 text-blue-400"></i>
+            <span
+              id="admin_email_label"
+              class="text-slate-300 font-mono"
+            ></span>
+            <button
+              onclick="doLogout()"
+              class="cursor-pointer ml-1 text-slate-500 hover:text-rose-400 transition-colors"
+              title="Logout"
+            >
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main
+        class="flex-1 w-full max-w-[1440px] mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 relative"
+      >
+        <section
+          id="admin_workspace"
+          class="lg:col-span-12 space-y-6 flex flex-col"
+        >
+          <!-- METRIK -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div
+              id="metric_card_total"
+              class="glass-card p-5 border-l-4 border-l-blue-500 flex items-center justify-between"
+            >
+              <div class="space-y-1">
+                <span
+                  class="text-xs text-slate-400 font-medium uppercase tracking-wider block"
+                  >Total Pesanan</span
+                >
+                <span
+                  id="metric_total_orders"
+                  class="text-2xl font-bold text-white block"
+                  >0</span
+                >
+                <span
+                  class="text-[10px] text-green-400 font-medium flex items-center gap-1"
+                  >↑ Live Data</span
+                >
+              </div>
+              <div
+                class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center"
+              >
+                <i data-lucide="layers" class="w-6 h-6 text-blue-400"></i>
+              </div>
+            </div>
+            <div
+              id="metric_pending_card"
+              class="glass-card p-5 border-l-4 border-l-orange-500 flex items-center justify-between transition-colors"
+            >
+              <div class="space-y-1">
+                <span
+                  class="text-xs text-slate-400 font-medium uppercase tracking-wider block"
+                  >Menunggu Konfirmasi</span
+                >
+                <span
+                  id="metric_pending_confirmation"
+                  class="text-2xl font-bold text-white block"
+                  >0</span
+                >
+                <span class="text-[10px] text-slate-400 block mt-0.5"
+                  >Membutuhkan perhatian segera</span
+                >
+              </div>
+              <div
+                class="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400"
+              >
+                <i
+                  data-lucide="alert-circle"
+                  class="w-6 h-6 text-orange-400"
+                ></i>
+              </div>
+            </div>
+            <div
+              id="metric_card_completed"
+              class="glass-card p-5 border-l-4 border-l-green-500 flex items-center justify-between"
+            >
+              <div class="space-y-1">
+                <span
+                  class="text-xs text-slate-400 font-medium uppercase tracking-wider block"
+                  >Selesai Dicuci</span
+                >
+                <span
+                  id="metric_completed_transactions"
+                  class="text-2xl font-bold text-green-400 block"
+                  >0</span
+                >
+                <span class="text-[10px] text-green-400 block mt-0.5"
+                  >Efisiensi operasional</span
+                >
+              </div>
+              <div
+                class="w-12 h-12 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400"
+              >
+                <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+              </div>
+            </div>
+            <div
+              id="metric_card_revenue"
+              class="glass-card p-5 border-l-4 border-l-emerald-400 flex items-center justify-between"
+            >
+              <div class="space-y-1">
+                <span
+                  class="text-xs text-slate-400 font-medium uppercase tracking-wider block"
+                  >Total Pendapatan</span
+                >
+                <span
+                  id="metric_total_revenue"
+                  class="text-2xl font-bold text-emerald-400 block"
+                  >Rp 0</span
+                >
+                <span class="text-[10px] text-slate-500 block mt-0.5"
+                  >Sesi hari ini</span
+                >
+              </div>
+              <div
+                class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-450"
+              >
+                <i
+                  data-lucide="dollar-sign"
+                  class="w-6 h-6 text-emerald-450"
+                ></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- GRID TARIF & CHART -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <section
+              id="pricing_panel"
+              class="glass-card p-5 flex flex-col justify-between"
+            >
+              <div>
+                <div
+                  class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4"
+                >
+                  <div>
+                    <h3
+                      class="font-bold text-white text-base flex items-center gap-2"
+                    >
+                      <i
+                        data-lucide="settings"
+                        class="w-4 h-4 text-blue-500"
+                      ></i
+                      >Pembaruan Tarif Dinamis
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-0.5">
+                      Koefisien harga langsung sinkron ke Database
+                    </p>
+                  </div>
+                  <span
+                    class="text-[9px] bg-blue-600/15 text-blue-400 border border-blue-500/25 px-2.5 py-1 rounded-full uppercase tracking-wider font-bold"
+                    >Dinamis</span
+                  >
+                </div>
+                <div class="space-y-3.5">
+                  <div>
+                    <span
+                      class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2"
+                      >Tarif Dasar Jasa Cuci</span
+                    >
+                    <div class="grid grid-cols-2 gap-3">
+                      <div>
+                        <label class="text-[10px] text-slate-400 block mb-1"
+                          >Cuci Mobil (Dasar)</label
+                        >
+                        <div class="relative">
+                          <span
+                            class="absolute left-3 top-2 text-xs text-slate-500 font-semibold font-mono"
+                            >Rp</span
+                          >
+                          <input
+                            type="number"
+                            id="input_mobil_base"
+                            value="0"
+                            oninput="updatePricesFromAdmin()"
+                            class="w-full bg-slate-900 border border-slate-800 hover:border-slate-700 focus:border-blue-500 text-xs font-semibold text-white py-1.5 pl-9 pr-2 rounded-xl transition-all"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label class="text-[10px] text-slate-400 block mb-1"
+                          >Cuci Motor (Dasar)</label
+                        >
+                        <div class="relative">
+                          <span
+                            class="absolute left-3 top-2 text-xs text-slate-500 font-semibold font-mono"
+                            >Rp</span
+                          >
+                          <input
+                            type="number"
+                            id="input_motor_base"
+                            value="0"
+                            oninput="updatePricesFromAdmin()"
+                            class="w-full bg-slate-900 border border-slate-800 hover:border-slate-700 focus:border-blue-500 text-xs font-semibold text-white py-1.5 pl-9 pr-2 rounded-xl transition-all"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pt-2 border-t border-slate-800/60">
+                    <span
+                      class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1.5"
+                      >Biaya Operasional Logistik</span
+                    >
+                    <div class="space-y-2">
+                      <div
+                        class="flex items-center justify-between gap-4 bg-slate-900/40 p-2 py-1.5 rounded-xl border border-slate-800/60"
+                      >
+                        <div class="flex items-center gap-2">
+                          <i
+                            data-lucide="map-pin"
+                            class="w-3.5 h-3.5 text-blue-400"
+                          ></i>
+                          <span class="text-xs text-slate-300"
+                            >Biaya Jemput Saja</span
+                          >
+                        </div>
+                        <div class="relative w-36">
+                          <span
+                            class="absolute left-2.5 top-1 text-[11px] text-slate-500 font-mono"
+                            >Rp</span
+                          >
+                          <input
+                            type="number"
+                            id="input_biaya_jemput"
+                            value="0"
+                            oninput="updatePricesFromAdmin()"
+                            class="w-full bg-slate-900 border border-slate-850 hover:border-slate-700 focus:border-blue-500 text-xs font-semibold text-white py-0.5 pl-7 pr-2 rounded text-right transition-all"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="flex items-center justify-between gap-4 bg-slate-900/40 p-2 py-1.5 rounded-xl border border-slate-800/60"
+                      >
+                        <div class="flex items-center gap-2">
+                          <i
+                            data-lucide="truck"
+                            class="w-3.5 h-3.5 text-sky-400"
+                          ></i>
+                          <span class="text-xs text-slate-300"
+                            >Biaya Antar Saja</span
+                          >
+                        </div>
+                        <div class="relative w-36">
+                          <span
+                            class="absolute left-2.5 top-1 text-[11px] text-slate-500 font-mono"
+                            >Rp</span
+                          >
+                          <input
+                            type="number"
+                            id="input_biaya_antar"
+                            value="0"
+                            oninput="updatePricesFromAdmin()"
+                            class="w-full bg-slate-900 border border-slate-850 hover:border-slate-700 focus:border-blue-500 text-xs font-semibold text-white py-0.5 pl-7 pr-2 rounded text-right transition-all"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="flex items-center justify-between gap-4 bg-slate-900/40 p-2 py-1.5 rounded-xl border border-slate-800/60"
+                      >
+                        <div class="flex items-center gap-2">
+                          <i
+                            data-lucide="refresh-cw"
+                            class="w-3.5 h-3.5 text-green-400"
+                          ></i>
+                          <span class="text-xs text-slate-300"
+                            >Biaya Paket Lengkap</span
+                          >
+                        </div>
+                        <div class="relative w-36">
+                          <span
+                            class="absolute left-2.5 top-1 text-[11px] text-slate-500 font-mono"
+                            >Rp</span
+                          >
+                          <input
+                            type="number"
+                            id="input_biaya_paket"
+                            value="0"
+                            oninput="updatePricesFromAdmin()"
+                            class="w-full bg-slate-900 border border-slate-800 hover:border-slate-700 focus:border-blue-500 text-xs font-semibold text-white py-0.5 pl-7 pr-2 rounded text-right transition-all"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="mt-4 p-3 rounded-xl bg-slate-900/60 border border-slate-800/50 flex items-start gap-2"
+              >
+                <i
+                  data-lucide="info"
+                  class="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5"
+                ></i>
+                <p class="text-[10px] text-slate-400 leading-normal">
+                  Perubahan tarif langsung tersimpan ke tabel
+                  <code>harga_cuci</code> &amp; <code>tarif_logistik</code> di
+                  MySQL.
+                </p>
+              </div>
+            </section>
+
+            <section
+              id="charts_panel"
+              class="glass-card p-5 flex flex-col justify-between"
+            >
+              <div>
+                <div
+                  class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3 mb-4"
+                >
+                  <div>
+                    <h3
+                      class="font-bold text-white text-base flex items-center gap-2"
+                    >
+                      <i
+                        data-lucide="trending-up"
+                        class="w-4 h-4 text-blue-400"
+                      ></i
+                      >Statistik &amp; Grafik Kinerja
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-0.5">
+                      Analisis tren real-time dari database
+                    </p>
+                  </div>
+                  <div
+                    class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs"
+                  >
+                    <button
+                      onclick="switchChartTab('tren')"
+                      id="btn_chart_tab_tren"
+                      class="cursor-pointer px-3 py-1 bg-blue-600 text-white rounded-lg font-medium transition-all"
+                    >
+                      Pendapatan
+                    </button>
+                    <button
+                      onclick="switchChartTab('motor_vs_mobil')"
+                      id="btn_chart_tab_ratio"
+                      class="cursor-pointer px-3 py-1 text-slate-400 hover:text-white rounded-lg font-medium transition-all"
+                    >
+                      Rasio Unit
+                    </button>
+                  </div>
+                </div>
+                <div
+                  id="chart_viz_container"
+                  class="my-4 h-44 flex items-center justify-center relative bg-slate-900/30 rounded-xl border border-slate-800/50 p-2"
+                >
+                  <svg
+                    id="svg_line_chart"
+                    class="w-full h-full"
+                    viewBox="0 0 450 160"
+                    preserveAspectRatio="none"
+                  >
+                    <line
+                      x1="0"
+                      y1="40"
+                      x2="450"
+                      y2="40"
+                      stroke="#334155"
+                      stroke-dasharray="3,3"
+                      stroke-width="0.5"
+                    />
+                    <line
+                      x1="0"
+                      y1="80"
+                      x2="450"
+                      y2="80"
+                      stroke="#334155"
+                      stroke-dasharray="3,3"
+                      stroke-width="0.5"
+                    />
+                    <line
+                      x1="0"
+                      y1="120"
+                      x2="450"
+                      y2="120"
+                      stroke="#334155"
+                      stroke-dasharray="3,3"
+                      stroke-width="0.5"
+                    />
+                    <defs>
+                      <linearGradient
+                        id="svg_blue_grad"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0%"
+                          stop-color="#3b82f6"
+                          stop-opacity="0.35"
+                        />
+                        <stop
+                          offset="100%"
+                          stop-color="#3b82f6"
+                          stop-opacity="0"
+                        />
+                      </linearGradient>
+                    </defs>
+                    <path
+                      id="svg_path_area"
+                      d="M 10 130 Q 80 110 120 100 T 220 70 T 320 85 T 440 40 L 440 140 L 10 140 Z"
+                      fill="url(#svg_blue_grad)"
+                    />
+                    <path
+                      id="svg_path_line"
+                      d="M 10 130 Q 80 110 120 100 T 220 70 T 320 85 T 440 40"
+                      fill="none"
+                      stroke="#3b82f6"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                    />
+                    <circle cx="10" cy="130" r="4" fill="#3b82f6" />
+                    <circle cx="120" cy="100" r="4" fill="#3b82f6" />
+                    <circle cx="220" cy="70" r="4" fill="#3b82f6" />
+                    <circle cx="440" cy="40" r="5" fill="#10b981" />
+                  </svg>
+                  <div
+                    id="ratio_circle_container"
+                    class="hidden absolute inset-0 flex flex-col items-center justify-center p-3"
+                  >
+                    <div class="flex items-center gap-6 justify-center w-full">
+                      <div
+                        class="relative w-24 h-24 flex items-center justify-center"
+                      >
+                        <div
+                          class="w-full h-full rounded-full border-8 border-slate-800 border-t-blue-500 border-r-blue-500 border-b-emerald-400 rotate-45"
+                        ></div>
+                        <div class="absolute text-center mt-0.5">
+                          <span
+                            id="chart_ratio_percent"
+                            class="text-sm font-extrabold text-white block"
+                            >0%</span
+                          >
+                          <span class="text-[9px] text-slate-500 block"
+                            >Mobil</span
+                          >
+                        </div>
+                      </div>
+                      <div
+                        class="space-y-1.5 text-xs text-slate-300 font-medium"
+                      >
+                        <div class="flex items-center gap-1.5">
+                          <span
+                            class="w-2.5 h-2.5 bg-blue-500 rounded-full"
+                          ></span>
+                          <span
+                            >Mobil:
+                            <strong id="chart_count_mobil">0</strong> Unit</span
+                          >
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                          <span
+                            class="w-2.5 h-2.5 bg-emerald-400 rounded-full"
+                          ></span>
+                          <span
+                            >Motor:
+                            <strong id="chart_count_motor">0</strong> Unit</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="grid grid-cols-2 gap-3 border-t border-slate-850 pt-3 text-xs"
+              >
+                <div
+                  class="flex items-center gap-2 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800"
+                >
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <div>
+                    <span
+                      class="text-[9px] text-slate-500 block font-bold uppercase"
+                      >RELEASE RATIO</span
+                    >
+                    <span
+                      id="label_release_ratio"
+                      class="font-semibold text-white"
+                      >0% Terkonfirmasi</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="flex items-center gap-2 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800"
+                >
+                  <i data-lucide="activity" class="w-4 h-4 text-blue-400"></i>
+                  <div>
+                    <span
+                      class="text-[9px] text-slate-500 block font-bold uppercase"
+                      >TOTAL AKTIVITAS</span
+                    >
+                    <span
+                      id="label_active_tasks"
+                      class="font-semibold text-white"
+                      >0 Antrean Aktif</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- TABEL PESANAN -->
+          <section id="orders_panel" class="glass-card flex flex-col">
+            <div
+              class="px-5 py-4 border-b border-slate-800/80 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4"
+            >
+              <div>
+                <h3
+                  class="font-bold text-white text-base flex items-center gap-2"
+                >
+                  <i data-lucide="inbox" class="w-5 h-5 text-blue-500"></i
+                  >Manajemen Pesanan Cuci &amp; Layanan
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  Data di-streaming langsung dari tabel <code>transaksi</code>
+                </p>
+              </div>
+              <div
+                class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto"
+              >
+                <div class="relative">
+                  <i
+                    data-lucide="search"
+                    class="absolute left-3 top-2.5 w-4 h-4 text-slate-500"
+                  ></i>
+                  <input
+                    type="text"
+                    id="order_search_field"
+                    oninput="filterOrders()"
+                    placeholder="Cari nama, plat, tipe..."
+                    class="bg-slate-900 border border-slate-800 text-xs py-2 pl-9 pr-3 rounded-xl text-white placeholder-slate-500 focus:border-blue-500 w-full sm:w-56 transition-all font-medium"
+                  />
+                </div>
+                <div
+                  class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs select-none"
+                >
+                  <button
+                    onclick="filterTab('Semua')"
+                    id="tab_all"
+                    class="cursor-pointer px-3 py-1.5 rounded-lg font-semibold bg-blue-600 text-white transition-all"
+                  >
+                    Semua
+                  </button>
+                  <button
+                    onclick="filterTab('Menunggu')"
+                    id="tab_pending"
+                    class="cursor-pointer px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white flex items-center gap-1.5 transition-all"
+                  >
+                    <span>Menunggu</span>
+                    <span
+                      id="tab_pending_badge"
+                      class="w-2 h-2 rounded-full bg-orange-400 animate-pulse"
+                    ></span>
+                  </button>
+                  <button
+                    onclick="filterTab('Selesai')"
+                    id="tab_completed"
+                    class="cursor-pointer px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition-all"
+                  >
+                    Selesai
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse min-w-[700px]">
+                <thead>
+                  <tr
+                    class="border-b border-slate-800 text-slate-400 text-[10px] font-extrabold uppercase tracking-widest bg-slate-900/40"
+                  >
+                    <th class="py-3.5 px-5">ID &amp; Tgl</th>
+                    <th class="py-3.5 px-4">Nama Pelanggan</th>
+                    <th class="py-3.5 px-4">Kendaraan / Plat</th>
+                    <th class="py-3.5 px-4">Modul Logistik</th>
+                    <th class="py-3.5 px-4 text-right">Total Biaya</th>
+                    <th class="py-3.5 px-4 text-center">Status</th>
+                    <th class="py-3.5 px-4 text-right">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="orders_table_body"
+                  class="divide-y divide-slate-800/40 text-xs text-slate-300"
+                ></tbody>
+              </table>
+            </div>
+            <div
+              class="px-5 py-3 border-t border-slate-800/80 bg-slate-950/40 text-[11px] font-medium flex justify-between items-center text-slate-400"
+            >
+              <span id="table_entries_label">Memuat data...</span>
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-orange-500/35"></span>
+                <span
+                  >Garis jingga menandakan antrean baru butuh persetujuan</span
+                >
+              </div>
+            </div>
+          </section>
+
+          <!-- PANEL DETAIL -->
+          <section id="operational_flow_panel" class="glass-card p-5 hidden">
+            <div
+              class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4 mb-4"
+            >
+              <div>
+                <div class="flex items-center gap-2">
+                  <span
+                    class="text-[10px] uppercase font-extrabold tracking-wider bg-blue-600/15 text-blue-400 border border-blue-500/25 px-2 py-0.5 rounded"
+                    >Rincian Operasional</span
+                  >
+                  <span
+                    id="active_panel_id"
+                    class="font-mono text-xs text-slate-550 font-bold"
+                    >#ID</span
+                  >
+                </div>
+                <h3 class="font-bold text-white text-base mt-1">
+                  Pelacakan &amp; Transisi Status:
+                  <span id="active_panel_customer" class="text-blue-300"
+                    >Nama</span
+                  >
+                </h3>
+              </div>
+              <div
+                class="bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 text-xs font-semibold"
+              >
+                <span class="text-slate-400">Tipe Layanan: </span>
+                <span id="active_panel_service_type" class="text-white"
+                  >Tipe</span
+                >
+                <span class="text-slate-600 mx-1.5">|</span>
+                <span id="active_panel_logistics" class="text-blue-300"
+                  >Logistik</span
+                >
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+              <div class="md:col-span-8 space-y-4">
+                <div class="grid grid-cols-4 gap-2 text-center text-xs">
+                  <div
+                    id="step_1"
+                    class="p-2.5 rounded-xl border border-slate-800 transition-all font-semibold"
+                  >
+                    <span
+                      class="block text-[9px] uppercase tracking-wider font-extrabold text-blue-500 mb-0.5"
+                      >Langkah 1</span
+                    ><span>Antrean</span>
+                  </div>
+                  <div
+                    id="step_2"
+                    class="p-2.5 rounded-xl border border-slate-800 transition-all font-semibold"
+                  >
+                    <span
+                      class="block text-[9px] uppercase tracking-wider font-extrabold text-purple-500 mb-0.5"
+                      >Langkah 2</span
+                    ><span>Diproses</span>
+                  </div>
+                  <div
+                    id="step_3"
+                    class="p-2.5 rounded-xl border border-slate-800 transition-all font-semibold"
+                  >
+                    <span
+                      class="block text-[9px] uppercase tracking-wider font-extrabold text-[#0ea5e9] mb-0.5"
+                      >Langkah 3</span
+                    ><span id="step_3_label">Logistik</span>
+                  </div>
+                  <div
+                    id="step_4"
+                    class="p-2.5 rounded-xl border border-slate-800 transition-all font-semibold"
+                  >
+                    <span
+                      class="block text-[9px] uppercase tracking-wider font-extrabold text-emerald-500 mb-0.5"
+                      >Langkah Akhir</span
+                    ><span>Selesai</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="md:col-span-4 bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs space-y-3"
+              >
+                <span
+                  class="text-[10px] font-bold text-slate-400 block uppercase tracking-widest text-center border-b border-slate-800/85 pb-2"
+                  >Ubah Status Pengerjaan Real-time:</span
+                >
+                <div
+                  id="status_lock_msg"
+                  class="hidden p-3 bg-orange-950/20 border border-orange-900/40 rounded-lg text-orange-300 text-center text-xs font-medium leading-normal"
+                >
+                  <i
+                    data-lucide="alert-circle"
+                    class="w-5 h-5 mx-auto mb-1 text-orange-400"
+                  ></i
+                  >Setujui pesanan di atas terlebih dahulu.
+                </div>
+                <div id="status_control_buttons" class="space-y-2">
+                  <div class="grid grid-cols-2 gap-2">
+                    <button
+                      id="btn_status_antrean"
+                      onclick="setStatusStep('Dalam Antrean')"
+                      class="cursor-pointer py-2 rounded-lg font-semibold transition-all bg-slate-900 border border-slate-850 text-slate-400 hover:text-white"
+                    >
+                      Dalam Antrean
+                    </button>
+                    <button
+                      id="btn_status_diproses"
+                      onclick="setStatusStep('Diproses')"
+                      class="cursor-pointer py-2 rounded-lg font-semibold transition-all bg-slate-900 border border-slate-850 text-slate-400 hover:text-white"
+                    >
+                      Cuci Selesai
+                    </button>
+                  </div>
+                  <button
+                    id="btn_status_antar"
+                    onclick="setStatusStep('Dalam Proses Di Antar')"
+                    class="hidden w-full cursor-pointer py-2.5 rounded-lg border border-slate-800 text-[#0ea5e9] bg-slate-900 hover:bg-sky-950/25 font-bold transition-all flex items-center justify-center gap-2"
+                  >
+                    <i data-lucide="truck" class="w-4 h-4"></i
+                    ><span>Mulai Pengantaran Logistik</span>
+                  </button>
+                  <button
+                    id="btn_status_selesai"
+                    onclick="setStatusStep('Selesai')"
+                    class="w-full cursor-pointer py-2.5 rounded-lg border border-slate-800 text-emerald-400 bg-slate-900 hover:bg-emerald-950/25 font-bold transition-all flex items-center justify-center gap-2"
+                  >
+                    <i data-lucide="check-circle-2" class="w-4 h-4"></i
+                    ><span>Tuntaskan Transaksi</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="log_panel" class="glass-card p-5">
+            <h4
+              class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2"
+            >
+              <i data-lucide="bell" class="w-4 h-4 text-blue-400"></i>Log
+              Sinkronisasi Real-Time Aktivitas Layanan
+            </h4>
+            <div
+              id="log_entries_container"
+              class="space-y-2 max-h-[140px] overflow-y-auto pr-1"
+            ></div>
+          </section>
+        </section>
+      </main>
+
+      <footer
+        class="bg-slate-950 py-5 mt-auto border-t border-slate-900 text-center text-xs text-slate-500 font-mono"
+      >
+        V-Wash Admin Panel • Fully Connected to MySQL via Node.js API
+      </footer>
+    </div>
+    <!-- /#app_wrapper -->
+
+    <script>
+      // ─── CONFIG ──────────────────────────────────────────────────────────────
+      // Ubah port ini jika server.js kamu jalan di port lain
+      const API_BASE = "http://localhost:3003/api";
+
+      // ─── STATE GLOBAL ────────────────────────────────────────────────────────
+      let prices = {
+        motorBase: 0,
+        mobilBase: 0,
+        biayaJemput: 0,
+        biayaAntar: 0,
+        biayaPaketJemputAntar: 0,
+      };
+      let orders = [];
+      let notifications = [
+        {
+          text: "Panel admin terhubung ke Database MySQL.",
+          type: "success",
+          time: "Sekarang",
+        },
+      ];
+      let activeFilterTab = "Semua";
+      let activeSelectedOrderId = null;
+      let currentChartTab = "tren";
+      let pollTimer = null;
+
+      function formatIDR(num) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+          maximumFractionDigits: 0,
+        }).format(num);
+      }
+
+      // ════════════════════════════════════════════════════════════════════════
+      //  AUTH
+      // ════════════════════════════════════════════════════════════════════════
+      async function doLogin() {
+        const email = document.getElementById("login_email").value.trim();
+        const password = document.getElementById("login_password").value;
+        const errBox = document.getElementById("login_error");
+        const btnText = document.getElementById("login_btn_text");
+
+        if (!email || !password) {
+          errBox.textContent = "Email dan kata sandi wajib diisi.";
+          errBox.classList.remove("hidden");
+          return;
+        }
+
+        btnText.textContent = "Memproses...";
+        errBox.classList.add("hidden");
+
+        try {
+          const res = await fetch(`${API_BASE}/admin/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ email, kata_sandi: password }),
+          });
+          const data = await res.json();
+
+          if (!res.ok) {
+            errBox.textContent = data.error || "Login gagal.";
+            errBox.classList.remove("hidden");
+            btnText.textContent = "Masuk";
+            return;
+          }
+
+          // Berhasil login
+          showApp(data.admin);
+        } catch (err) {
+          errBox.textContent =
+            "Tidak dapat terhubung ke server. Pastikan server.js berjalan!";
+          errBox.classList.remove("hidden");
+          btnText.textContent = "Masuk";
+        }
+      }
+
+      async function doLogout() {
+        try {
+          await fetch(`${API_BASE}/admin/logout`, {
+            method: "POST",
+            credentials: "include",
+          });
+        } catch (_) {}
+        location.reload();
+      }
+
+      function showApp(admin) {
+        document.getElementById("login_overlay").classList.add("hidden");
+        const wrapper = document.getElementById("app_wrapper");
+        wrapper.classList.remove("hidden");
+        wrapper.classList.add("flex");
+
+        // Tampilkan info admin di header
+        const infoEl = document.getElementById("admin_info");
+        infoEl.classList.remove("hidden");
+        infoEl.classList.add("flex");
+        document.getElementById("admin_email_label").textContent = admin.email;
+
+        lucide.createIcons();
+        initApp();
+      }
+
+      // Cek apakah sesi sudah aktif (refresh halaman)
+      async function checkSession() {
+        try {
+          const res = await fetch(`${API_BASE}/admin/me`, {
+            credentials: "include",
+          });
+          if (res.ok) {
+            const data = await res.json();
+            showApp(data.admin);
+          } else {
+            // Tampilkan login
+            lucide.createIcons();
+          }
+        } catch (_) {
+          lucide.createIcons();
+        }
+      }
+
+      // ════════════════════════════════════════════════════════════════════════
+      //  INIT APLIKASI (dipanggil setelah login berhasil)
+      // ════════════════════════════════════════════════════════════════════════
+      async function initApp() {
+        await fetchPrices();
+        await fetchOrders();
+        renderNotifications();
+        lucide.createIcons();
+
+        // Auto-refresh setiap 15 detik
+        if (pollTimer) clearInterval(pollTimer);
+        pollTimer = setInterval(fetchOrders, 15000);
+      }
+
+      // ════════════════════════════════════════════════════════════════════════
+      //  FETCH DATA DARI BACKEND
+      // ════════════════════════════════════════════════════════════════════════
+      async function fetchOrders() {
+        try {
+          const res = await fetch(`${API_BASE}/orders`, {
+            credentials: "include",
+          });
+          if (res.status === 401) {
+            location.reload();
+            return;
+          }
+          orders = await res.json();
+          if (
+            orders.length > 0 &&
+            !orders.find((o) => o.id === activeSelectedOrderId)
+          ) {
+            activeSelectedOrderId = orders[0].id;
+          }
+          renderMetrics();
+          renderOrders();
+          renderActivePanel();
+          drawCharts();
+        } catch (err) {
+          console.error("Gagal mengambil data pesanan:", err);
+          pushNotification(
+            "⚠️ Gagal terhubung ke Backend API. Pastikan server.js sudah berjalan!",
+            "warning",
+          );
+        }
+      }
+
+      async function fetchPrices() {
+        try {
+          const res = await fetch(`${API_BASE}/prices`, {
+            credentials: "include",
+          });
+          if (!res.ok) return;
+          const data = await res.json();
+          prices = {
+            mobilBase: data.mobilBase,
+            motorBase: data.motorBase,
+            biayaJemput: data.biayaJemput,
+            biayaAntar: data.biayaAntar,
+            biayaPaketJemputAntar: data.biayaPaket,
+          };
+          document.getElementById("input_mobil_base").value = prices.mobilBase;
+          document.getElementById("input_motor_base").value = prices.motorBase;
+          document.getElementById("input_biaya_jemput").value =
+            prices.biayaJemput;
+          document.getElementById("input_biaya_antar").value =
+            prices.biayaAntar;
+          document.getElementById("input_biaya_paket").value =
+            prices.biayaPaketJemputAntar;
+        } catch (err) {
+          console.error("Gagal mengambil data harga:", err);
+        }
+      }
+
+      // ════════════════════════════════════════════════════════════════════════
+      //  UPDATE HARGA
+      // ════════════════════════════════════════════════════════════════════════
+      async function updatePricesFromAdmin() {
+        const mobVal =
+          parseInt(document.getElementById("input_mobil_base").value) || 0;
+        const motVal =
+          parseInt(document.getElementById("input_motor_base").value) || 0;
+        const jemVal =
+          parseInt(document.getElementById("input_biaya_jemput").value) || 0;
+        const antVal =
+          parseInt(document.getElementById("input_biaya_antar").value) || 0;
+        const pakVal =
+          parseInt(document.getElementById("input_biaya_paket").value) || 0;
+
+        try {
+          await fetch(`${API_BASE}/prices`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              mobilBase: mobVal,
+              motorBase: motVal,
+              biayaJemput: jemVal,
+              biayaAntar: antVal,
+              biayaPaket: pakVal,
+            }),
+          });
+
+          const toast = document.getElementById("price_sync_toast");
+          toast.classList.remove("hidden");
+          setTimeout(() => toast.classList.add("hidden"), 3000);
+
+          pushNotification(
+            "Biaya tarif pelayanan dinamis diperbarui ke Database.",
+            "info",
+          );
+          await fetchOrders();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      // ════════════════════════════════════════════════════════════════════════
+      //  CHART
+      // ════════════════════════════════════════════════════════════════════════
+      function switchChartTab(tab) {
+        currentChartTab = tab;
+        const btnTren = document.getElementById("btn_chart_tab_tren");
+        const btnRatio = document.getElementById("btn_chart_tab_ratio");
+        const svgArea = document.getElementById("svg_line_chart");
+        const ratioCon = document.getElementById("ratio_circle_container");
+        if (tab === "tren") {
+          btnTren.className =
+            "cursor-pointer px-3 py-1 bg-blue-600 text-white rounded-lg font-medium transition-all";
+          btnRatio.className =
+            "cursor-pointer px-3 py-1 text-slate-400 hover:text-white rounded-lg font-medium transition-all";
+          svgArea.style.display = "block";
+          ratioCon.classList.add("hidden");
+        } else {
+          btnTren.className =
+            "cursor-pointer px-3 py-1 text-slate-400 hover:text-white rounded-lg font-medium transition-all";
+          btnRatio.className =
+            "cursor-pointer px-3 py-1 bg-blue-600 text-white rounded-lg font-medium transition-all";
+          svgArea.style.display = "none";
+          ratioCon.classList.remove("hidden");
+        }
+        drawCharts();
+      }
+
+      function drawCharts() {
+        const countMobil = orders.filter(
+          (o) => o.vehicleType === "Mobil",
+        ).length;
+        const countMotor = orders.filter(
+          (o) => o.vehicleType === "Motor",
+        ).length;
+        const totalUnits = countMobil + countMotor;
+        const percentMobil = totalUnits
+          ? Math.round((countMobil / totalUnits) * 100)
+          : 0;
+        document.getElementById("chart_ratio_percent").innerText =
+          percentMobil + "%";
+        document.getElementById("chart_count_mobil").innerText = countMobil;
+        document.getElementById("chart_count_motor").innerText = countMotor;
+      }
+
+      // ════════════════════════════════════════════════════════════════════════
+      //  METRIK
+      // ════════════════════════════════════════════════════════════════════════
+      function renderMetrics() {
+        const activeOrds = orders.filter((o) => o.status !== "Dibatalkan");
+        document.getElementById("metric_total_orders").innerText =
+          activeOrds.length;
+
+        const pCount = orders.filter(
+          (o) => o.status === "Menunggu Konfirmasi",
+        ).length;
+        document.getElementById("metric_pending_confirmation").innerText =
+          pCount;
+        const pendingCard = document.getElementById("metric_pending_card");
+        pendingCard.className =
+          pCount > 0
+            ? "glass-card p-5 border-l-4 border-l-orange-500 bg-orange-950/20 flex items-center justify-between"
+            : "glass-card p-5 border-l-4 border-l-slate-800 flex items-center justify-between";
+
+        const completed = orders.filter((o) => o.status === "Selesai");
+        document.getElementById("metric_completed_transactions").innerText =
+          completed.length;
+        const rev = completed.reduce((sum, o) => sum + o.totalPrice, 0);
+        document.getElementById("metric_total_revenue").innerText =
+          formatIDR(rev);
+
+        const releaseRatio = orders.length
+          ? Math.round((completed.length / orders.length) * 100)
+          : 0;
+        document.getElementById("label_release_ratio").innerText =
+          releaseRatio + "% Terkonfirmasi";
+        const queueCount = orders.filter(
+          (o) => o.status === "Dalam Antrean" || o.status === "Diproses",
+        ).length;
+        document.getElementById("label_active_tasks").innerText =
+          queueCount + " Antrean Aktif";
+
+        const tabBadge = document.getElementById("tab_pending_badge");
+        pCount > 0
+          ? tabBadge.classList.remove("hidden")
+          : tabBadge.classList.add("hidden");
+      }
+
+      // ════════════════════════════════════════════════════════════════════════
+      //  TABEL PESANAN
+      // ════════════════════════════════════════════════════════════════════════
+      function filterTab(tab) {
+        activeFilterTab = tab;
+        ["tab_all", "tab_pending", "tab_completed"].forEach((id) => {
+          document.getElementById(id).className =
+            "cursor-pointer px-3 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition-all";
+        });
+        document.getElementById(
+          `tab_${tab === "Semua" ? "all" : tab === "Menunggu" ? "pending" : "completed"}`,
+        ).className =
+          "cursor-pointer px-3 py-1.5 rounded-lg font-semibold bg-blue-600 text-white transition-all";
+        renderOrders();
+      }
+
+      function filterOrders() {
+        renderOrders();
+      }
+
+      function renderOrders() {
+        const searchVal = document
+          .getElementById("order_search_field")
+          .value.toLowerCase();
+        const tbody = document.getElementById("orders_table_body");
+        tbody.innerHTML = "";
+        let matches = orders.filter((o) => {
+          if (activeFilterTab === "Menunggu")
+            return o.status === "Menunggu Konfirmasi";
+          if (activeFilterTab === "Selesai") return o.status === "Selesai";
+          return true;
+        });
+        if (searchVal)
+          matches = matches.filter(
+            (o) =>
+              o.customerName.toLowerCase().includes(searchVal) ||
+              o.vehicleModel.toLowerCase().includes(searchVal) ||
+              o.vehiclePlate.toLowerCase().includes(searchVal) ||
+              o.id.toLowerCase().includes(searchVal),
+          );
+
+        document.getElementById("table_entries_label").innerText =
+          `Menampilkan ${matches.length} dari ${orders.length} entri data`;
+
+        if (matches.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" class="py-12 text-center text-slate-500"><i data-lucide="inbox" class="w-10 h-10 mx-auto mb-2 opacity-30"></i><p class="text-sm font-semibold">Tidak Ada Pesanan Ditemukan</p></td></tr>`;
+          lucide.createIcons();
+          return;
+        }
+
+        matches.forEach((order) => {
+          const isPending = order.status === "Menunggu Konfirmasi";
+          const isSelected = order.id === activeSelectedOrderId;
+          let rowClass = `cursor-pointer transition-colors relative hover:bg-slate-900/40 ${isSelected ? "bg-slate-900/60 border-l-2 border-l-blue-500 font-medium" : ""}`;
+          if (isPending)
+            rowClass += " border-l-2 border-l-orange-500 bg-orange-500/[0.02]";
+
+          const logisticsBadge =
+            order.logistics === "Datang Langsung"
+              ? "bg-slate-800/80 text-slate-400 border border-slate-700/50"
+              : "bg-blue-950/60 text-blue-400 border border-blue-900/30";
+
+          let statusBadge =
+            "bg-slate-500/10 text-slate-400 border border-slate-500/20";
+          if (isPending)
+            statusBadge =
+              "bg-orange-500/10 text-orange-400 border border-orange-500/20";
+          else if (order.status === "Dalam Antrean")
+            statusBadge =
+              "bg-blue-600/10 text-blue-400 border border-blue-500/20";
+          else if (order.status === "Diproses")
+            statusBadge =
+              "bg-purple-600/10 text-purple-400 border border-purple-500/20";
+          else if (order.status === "Dalam Proses Di Antar")
+            statusBadge =
+              "bg-sky-600/10 text-sky-400 border border-sky-500/30 status-pulse font-extrabold";
+          else if (order.status === "Dibatalkan")
+            statusBadge =
+              "bg-rose-500/10 text-rose-400 border border-rose-500/20";
+          else if (order.status === "Selesai")
+            statusBadge =
+              "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+
+          let actions = ``;
+          if (isPending) {
+            actions += `<button onclick="approveOrder('${order.id}',event)" title="Setujui" class="cursor-pointer p-1 text-emerald-400 hover:text-white hover:bg-emerald-600/20 rounded-lg transition-all"><i data-lucide="check-circle-2" class="w-4 h-4"></i></button>`;
+            actions += `<button onclick="cancelOrder('${order.id}',event)"  title="Tolak"   class="cursor-pointer p-1 text-rose-400 hover:text-white hover:bg-rose-600/20 rounded-lg transition-all"><i data-lucide="x-square" class="w-4 h-4"></i></button>`;
+          }
+          actions += `<button onclick="deleteOrder('${order.id}',event)" title="Hapus Permanen" class="cursor-pointer p-1 text-slate-500 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`;
+
+          const newBadge = order.isNew
+            ? `<span class="text-[8px] px-1 bg-orange-500/20 text-orange-400 font-sans font-bold animate-pulse">BARU</span>`
+            : "";
+
+          const tr = document.createElement("tr");
+          tr.className = rowClass;
+          tr.onclick = () => selectOrder(order.id);
+          tr.innerHTML = `
+            <td class="py-3 px-5"><div class="font-mono font-semibold text-blue-400 flex items-center gap-1.5">${order.id} ${newBadge}</div><div class="text-[10px] text-slate-500 mt-0.5">${order.timestamp}</div></td>
+            <td class="py-3 px-4"><div class="font-bold text-white">${order.customerName}</div><div class="text-[10px] text-slate-500 font-mono mt-0.5">${order.customerPhone}</div></td>
+            <td class="py-3 px-4"><div class="flex items-center gap-1.5 font-semibold text-slate-100">${order.vehicleType === "Mobil" ? '<i data-lucide="car" class="w-4 h-4 text-blue-400"></i>' : '<i data-lucide="bike" class="w-4 h-4 text-emerald-400"></i>'}<span class="truncate max-w-[120px]">${order.vehicleModel}</span></div><div class="text-[10px] font-mono font-bold text-slate-400 mt-0.5 tracking-wider">${order.vehiclePlate}</div></td>
+            <td class="py-3 px-4"><span class="text-[10px] px-2 py-0.5 rounded-full font-semibold ${logisticsBadge}">${order.logistics}</span></td>
+            <td class="py-3 px-4 text-right font-mono text-white font-semibold">${formatIDR(order.totalPrice)}</td>
+            <td class="py-3 px-4 text-center"><span class="inline-block text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${statusBadge}">${order.status}</span></td>
+            <td class="py-3 px-4 text-right" onclick="event.stopPropagation()"><div class="flex justify-end gap-1.5">${actions}</div></td>`;
+          tbody.appendChild(tr);
+        });
+        lucide.createIcons();
+      }
+
+      function selectOrder(id) {
+        activeSelectedOrderId = id;
+        document
+          .getElementById("operational_flow_panel")
+          .classList.remove("hidden");
+        renderOrders();
+        renderActivePanel();
+      }
+
+      function renderActivePanel() {
+        const order = orders.find((o) => o.id === activeSelectedOrderId);
+        if (!order) {
+          document
+            .getElementById("operational_flow_panel")
+            .classList.add("hidden");
+          return;
+        }
+
+        document.getElementById("active_panel_id").innerText = "#" + order.id;
+        document.getElementById("active_panel_customer").innerText =
+          order.customerName;
+        document.getElementById("active_panel_service_type").innerText =
+          order.vehicleType;
+        document.getElementById("active_panel_logistics").innerText =
+          order.logistics;
+
+        ["step_1", "step_2", "step_3", "step_4"].forEach(
+          (id) =>
+            (document.getElementById(id).className =
+              "p-2.5 rounded-xl border border-slate-800 text-slate-500 bg-slate-950 font-semibold"),
+        );
+
+        const hasLogistics = order.logistics !== "Datang Langsung";
+        document.getElementById("step_3_label").innerText = hasLogistics
+          ? "Logistik (Di-antar)"
+          : "Lewati (Datang Sendiri)";
+
+        const status = order.status;
+        if (status === "Dalam Antrean")
+          document.getElementById("step_1").className =
+            "p-2.5 rounded-xl border border-blue-500 text-blue-300 bg-blue-650/15 font-bold scale-[1.03]";
+        else if (status === "Diproses")
+          document.getElementById("step_2").className =
+            "p-2.5 rounded-xl border border-purple-500 text-purple-300 bg-purple-650/15 font-bold scale-[1.03]";
+        else if (status === "Dalam Proses Di Antar")
+          document.getElementById("step_3").className =
+            "p-2.5 rounded-xl border border-sky-500 text-sky-300 bg-sky-650/15 font-bold scale-[1.03]";
+        else if (status === "Selesai")
+          document.getElementById("step_4").className =
+            "p-2.5 rounded-xl border border-emerald-500 text-emerald-300 bg-emerald-650/15 font-bold scale-[1.03]";
+
+        const sLock = document.getElementById("status_lock_msg");
+        const sCtrls = document.getElementById("status_control_buttons");
+        const btnAntar = document.getElementById("btn_status_antar");
+
+        if (status === "Menunggu Konfirmasi") {
+          sLock.innerHTML = `<i data-lucide="alert-circle" class="w-5 h-5 mx-auto mb-1 text-orange-400"></i>Setujui pesanan di atas terlebih dahulu.`;
+          sLock.classList.remove("hidden");
+          sCtrls.classList.add("hidden");
+        } else if (status === "Dibatalkan") {
+          sLock.innerHTML = `<span class="text-rose-400 font-semibold block">⚠️ Pesanan ini dibatalkan</span>`;
+          sLock.classList.remove("hidden");
+          sCtrls.classList.add("hidden");
+        } else {
+          sLock.classList.add("hidden");
+          sCtrls.classList.remove("hidden");
+          hasLogistics
+            ? (btnAntar.classList.remove("hidden"),
+              (btnAntar.style.display = "flex"))
+            : (btnAntar.classList.add("hidden"),
+              (btnAntar.style.display = "none"));
+
+          [
+            "btn_status_antrean",
+            "btn_status_diproses",
+            "btn_status_antar",
+            "btn_status_selesai",
+          ].forEach((id) => {
+            const el = document.getElementById(id);
+            el.className =
+              el.id === "btn_status_antar"
+                ? "w-full cursor-pointer py-2.5 rounded-lg border border-slate-800 text-[#0ea5e9] bg-slate-900 hover:bg-sky-950/25 font-bold transition-all flex items-center justify-center gap-2"
+                : "w-full cursor-pointer py-2.5 rounded-lg border border-slate-800 text-slate-400 bg-slate-900 hover:bg-slate-800 font-bold transition-all flex items-center justify-center gap-2";
+          });
+
+          if (status === "Dalam Antrean")
+            document.getElementById("btn_status_antrean").className =
+              "cursor-pointer py-2 rounded-lg font-semibold text-white bg-blue-600 transition-all shadow-md";
+          else if (status === "Diproses")
+            document.getElementById("btn_status_diproses").className =
+              "cursor-pointer py-2 rounded-lg font-semibold text-white bg-purple-600 transition-all shadow-md";
+          else if (status === "Dalam Proses Di Antar")
+            document.getElementById("btn_status_antar").className =
+              "w-full cursor-pointer py-2.5 rounded-lg text-white bg-sky-600 border-sky-500 font-bold transition-all flex items-center justify-center gap-2 shadow-md";
+          else if (status === "Selesai")
+            document.getElementById("btn_status_selesai").className =
+              "w-full cursor-pointer py-2.5 rounded-lg text-white bg-emerald-600 border-emerald-500 font-bold transition-all flex items-center justify-center gap-2 shadow-md";
+        }
+        lucide.createIcons();
+      }
+
+      // ════════════════════════════════════════════════════════════════════════
+      //  AKSI PESANAN (semua pakai credentials agar cookie sesi ikut)
+      // ════════════════════════════════════════════════════════════════════════
+      async function setStatusStep(status) {
+        try {
+          await fetch(`${API_BASE}/orders/${activeSelectedOrderId}/status`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ status }),
+          });
+          pushNotification(
+            `Status ${activeSelectedOrderId} diubah ke: ${status}.`,
+            "info",
+          );
+          await fetchOrders();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      async function approveOrder(id, event) {
+        if (event) event.stopPropagation();
+        try {
+          await fetch(`${API_BASE}/orders/${id}/status`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ status: "Dalam Antrean" }),
+          });
+          pushNotification(`Pesanan ${id} telah DISETUJUI.`, "success");
+          beeper(440, 200, "sine");
+          await fetchOrders();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      async function cancelOrder(id, event) {
+        if (event) event.stopPropagation();
+        try {
+          await fetch(`${API_BASE}/orders/${id}/status`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ status: "Dibatalkan" }),
+          });
+          pushNotification(`Pesanan ${id} DIBATALKAN.`, "warning");
+          beeper(150, 400, "sawtooth");
+          await fetchOrders();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      async function deleteOrder(id, event) {
+        if (event) event.stopPropagation();
+        if (!confirm("Hapus permanen pesanan ini dari database?")) return;
+        try {
+          await fetch(`${API_BASE}/orders/${id}`, {
+            method: "DELETE",
+            credentials: "include",
+          });
+          pushNotification(`Data pesanan ${id} dihapus permanen.`, "info");
+          if (id === activeSelectedOrderId)
+            activeSelectedOrderId =
+              orders.length > 1 ? orders.find((o) => o.id !== id)?.id : null;
+          await fetchOrders();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      // ════════════════════════════════════════════════════════════════════════
+      //  LOG & NOTIF
+      // ════════════════════════════════════════════════════════════════════════
+      function pushNotification(text, type) {
+        notifications.unshift({ text, type, time: "Baru saja" });
+        renderNotifications();
+      }
+
+      function renderNotifications() {
+        const container = document.getElementById("log_entries_container");
+        if (!container) return;
+        container.innerHTML = "";
+        notifications.forEach((n) => {
+          let emoji = "🔵";
+          if (n.type === "success") emoji = "🟢";
+          if (n.type === "warning") emoji = "🟡";
+          const div = document.createElement("div");
+          div.className =
+            "flex justify-between items-start gap-4 p-2 bg-slate-900/60 border border-slate-800/40 rounded-xl text-[11px] select-none";
+          div.innerHTML = `<div class="flex gap-2 font-medium"><span class="flex-shrink-0 mt-0.5">${emoji}</span><span class="text-slate-300 leading-normal">${n.text}</span></div><span class="font-mono text-slate-500 flex-shrink-0 font-semibold">${n.time}</span>`;
+          container.appendChild(div);
+        });
+      }
+
+      function beeper(freq, duration, type) {
+        try {
+          const audioCtx = new (
+            window.AudioContext || window.webkitAudioContext
+          )();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.type = type || "sine";
+          osc.frequency.value = freq || 440;
+          gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            audioCtx.currentTime + duration / 1000,
+          );
+          osc.start();
+          osc.stop(audioCtx.currentTime + duration / 1000);
+        } catch (e) {}
+      }
+
+      // ─── Entry point ──────────────────────────────────────────────────────
+      window.addEventListener("DOMContentLoaded", checkSession);
+    </script>
+  </body>
+</html>

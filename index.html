@@ -1,0 +1,2024 @@
+INDEX.HTML
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CucianUNP — Sistem Cuci Kendaraan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --ink: #0a0f1e;
+        --ink2: #2a3045;
+        --ink3: #5a6180;
+        --sky: #e8f4ff;
+        --sky2: #c6e3ff;
+        --cyan: #00c6e0;
+        --cyan2: #0099b8;
+        --water: #006aff;
+        --water2: #0044cc;
+        --foam: #f0fbff;
+        --foam2: #d4f5ff;
+        --card: #ffffff;
+        --border: #e0eaf5;
+        --success: #00b87a;
+        --warn: #f59e0b;
+        --danger: #ef4444;
+        --r: 14px;
+        --r2: 22px;
+        --r3: 40px;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--ink);
+        color: #fff;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+      .hero {
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #060c1f 0%,
+          #0a1535 40%,
+          #0d2050 70%,
+          #091830 100%
+        );
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .bubble {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(0, 198, 224, 0.18),
+          rgba(0, 106, 255, 0.08)
+        );
+        animation: float 8s ease-in-out infinite;
+      }
+      .bubble:nth-child(1) {
+        width: 600px;
+        height: 600px;
+        top: -200px;
+        right: -150px;
+      }
+      .bubble:nth-child(2) {
+        width: 400px;
+        height: 400px;
+        bottom: -100px;
+        left: -100px;
+        animation-delay: 2s;
+      }
+      .bubble:nth-child(3) {
+        width: 200px;
+        height: 200px;
+        top: 30%;
+        left: 5%;
+        animation-delay: 4s;
+      }
+      .bubble:nth-child(4) {
+        width: 120px;
+        height: 120px;
+        top: 60%;
+        right: 10%;
+        animation-delay: 1s;
+      }
+      .bubble:nth-child(5) {
+        width: 80px;
+        height: 80px;
+        top: 20%;
+        right: 30%;
+        animation-delay: 3s;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-30px) scale(1.05);
+        }
+      }
+      .water-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 120px;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          rgba(0, 198, 224, 0.06)
+        );
+      }
+      .logo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(0, 198, 224, 0.12);
+        border: 1px solid rgba(0, 198, 224, 0.3);
+        border-radius: var(--r3);
+        padding: 8px 20px;
+        margin-bottom: 2rem;
+      }
+      .logo-badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 12px var(--cyan);
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(1.2);
+        }
+      }
+      .logo-badge span {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--cyan);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .hero-title {
+        font-family: "Syne", sans-serif;
+        font-size: clamp(3rem, 8vw, 6.5rem);
+        font-weight: 800;
+        line-height: 1;
+        text-align: center;
+      }
+      .hero-title .line1 {
+        display: block;
+        color: #fff;
+      }
+      .hero-title .line2 {
+        display: block;
+        background: linear-gradient(
+          90deg,
+          var(--cyan),
+          var(--water),
+          var(--cyan)
+        );
+        background-size: 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer 4s linear infinite;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 0%;
+        }
+        100% {
+          background-position: 200%;
+        }
+      }
+      .hero-sub {
+        font-size: 1.1rem;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.55);
+        text-align: center;
+        margin-top: 1.5rem;
+        max-width: 420px;
+        line-height: 1.7;
+      }
+      .hero-stats {
+        display: flex;
+        gap: 2.5rem;
+        margin-top: 3.5rem;
+      }
+      .hero-stat {
+        text-align: center;
+      }
+      .hero-stat-num {
+        font-family: "Syne", sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(180deg, #fff, rgba(255, 255, 255, 0.6));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero-stat-lbl {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-top: 4px;
+      }
+      .stat-div {
+        width: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        align-self: stretch;
+      }
+      .scroll-hint {
+        position: absolute;
+        bottom: 2.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .scroll-hint span {
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: rgba(255, 255, 255, 0.3);
+        text-transform: uppercase;
+      }
+      .scroll-arrow {
+        width: 24px;
+        height: 24px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+        border-right: 2px solid rgba(255, 255, 255, 0.25);
+        transform: rotate(45deg);
+        animation: bounce 1.5s ease-in-out infinite;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: rotate(45deg) translate(0, 0);
+        }
+        50% {
+          transform: rotate(45deg) translate(4px, 4px);
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .features {
+        background: linear-gradient(180deg, #060c1f, #0d1a30);
+        padding: 5rem 2rem;
+      }
+      .section-label {
+        text-align: center;
+        font-size: 11px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 1rem;
+      }
+      .section-title {
+        font-family: "Syne", sans-serif;
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .section-sub {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 0.95rem;
+        margin-bottom: 3rem;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.7;
+      }
+      .feat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .feat-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--r2);
+        padding: 2rem 1.5rem;
+        transition: all 0.3s ease;
+      }
+      .feat-card:hover {
+        background: rgba(0, 198, 224, 0.06);
+        border-color: rgba(0, 198, 224, 0.25);
+        transform: translateY(-4px);
+      }
+      .feat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--r);
+        background: rgba(0, 198, 224, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.25rem;
+        font-size: 22px;
+      }
+      .feat-title {
+        font-family: "Syne", sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .feat-desc {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.45);
+        line-height: 1.6;
+      }
+      .pricing {
+        background: #060c1f;
+        padding: 5rem 2rem;
+      }
+      .price-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .price-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: var(--r2);
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .price-card.featured {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 106, 255, 0.15),
+          rgba(0, 198, 224, 0.1)
+        );
+        border-color: rgba(0, 198, 224, 0.35);
+      }
+      .price-badge {
+        display: inline-block;
+        background: rgba(0, 198, 224, 0.15);
+        color: var(--cyan);
+        font-size: 11px;
+        letter-spacing: 1px;
+        padding: 4px 12px;
+        border-radius: var(--r3);
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .price-type {
+        font-family: "Syne", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+      .price-amount {
+        font-family: "Syne", sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+      }
+      .price-amount span {
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "DM Sans", sans-serif;
+      }
+      .price-items {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .price-items li {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.5);
+        padding-left: 16px;
+        position: relative;
+        line-height: 1.5;
+      }
+      .price-items li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--success);
+        font-size: 11px;
+        top: 2px;
+      }
+      .action-strip {
+        background: linear-gradient(135deg, #0d1a30, #091325);
+        padding: 3rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .action-panel {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--r2);
+        padding: 2rem 2.5rem;
+        max-width: 900px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      .action-left {
+        flex: 1;
+        min-width: 200px;
+      }
+      .action-label {
+        font-size: 12px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--cyan);
+        margin-bottom: 0.5rem;
+      }
+      .action-title {
+        font-family: "Syne", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+      .action-sub {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .action-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .mode-toggle {
+        display: flex;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--r3);
+        padding: 4px;
+        gap: 4px;
+      }
+      .mode-btn {
+        padding: 10px 22px;
+        border-radius: var(--r3);
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.45);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+      }
+      .mode-btn.active {
+        background: linear-gradient(135deg, var(--water), var(--cyan2));
+        color: #fff;
+        box-shadow: 0 4px 20px rgba(0, 106, 255, 0.35);
+      }
+      .cta-btn {
+        padding: 12px 28px;
+        border-radius: var(--r3);
+        border: none;
+        background: linear-gradient(135deg, var(--water), var(--cyan));
+        color: #fff;
+        font-family: "Syne", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+      .cta-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 106, 255, 0.4);
+      }
+      .id-input-wrap {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(0, 198, 224, 0.35);
+        border-radius: var(--r3);
+        padding: 6px 6px 6px 18px;
+      }
+      .id-input-wrap.show {
+        display: flex;
+      }
+      .id-input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.875rem;
+        width: 180px;
+      }
+      .id-input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+      }
+      .id-go {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--water), var(--cyan2));
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #fff;
+      }
+      .form-section {
+        background: linear-gradient(180deg, #091325, #060c1f);
+        padding: 5rem 2rem;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .form-shell {
+        max-width: 780px;
+        width: 100%;
+      }
+      .step-track {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 3rem;
+      }
+      .step-dot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        flex: 1;
+        position: relative;
+      }
+      .step-dot:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        top: 18px;
+        left: 50%;
+        right: -50%;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .step-dot.done::after,
+      .step-dot.active::after {
+        background: rgba(0, 198, 224, 0.4);
+      }
+      .step-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Syne", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.03);
+        position: relative;
+        z-index: 1;
+        transition: all 0.4s ease;
+      }
+      .step-dot.active .step-circle {
+        border-color: var(--cyan);
+        color: var(--cyan);
+        background: rgba(0, 198, 224, 0.1);
+      }
+      .step-dot.done .step-circle {
+        border-color: var(--success);
+        background: var(--success);
+        color: #fff;
+      }
+      .step-label {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.3);
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+      .step-dot.active .step-label {
+        color: var(--cyan);
+      }
+      .form-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--r2);
+        padding: 2.5rem;
+        margin-bottom: 1.5rem;
+        display: none;
+      }
+      .form-card.active {
+        display: block;
+        animation: fadeUp 0.4s ease;
+      }
+      .form-card-title {
+        font-family: "Syne", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .form-card-title-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--r);
+        background: rgba(0, 198, 224, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+      }
+      .form-card-sub {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 2rem;
+        padding-left: 46px;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+      }
+      .form-grid.single {
+        grid-template-columns: 1fr;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .form-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .form-input {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--r);
+        padding: 12px 16px;
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .form-input:focus {
+        border-color: rgba(0, 198, 224, 0.5);
+      }
+      .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.2);
+      }
+      select.form-input option {
+        background: #1a2540;
+        color: #fff;
+      }
+      .id-display {
+        background: rgba(0, 198, 224, 0.08);
+        border: 1px solid rgba(0, 198, 224, 0.25);
+        border-radius: var(--r);
+        padding: 12px 16px;
+        color: var(--cyan);
+        font-family: "Syne", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .logistic-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 0.5rem;
+      }
+      .logistic-opt {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1.5px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--r2);
+        padding: 1.25rem 1rem;
+        cursor: pointer;
+        transition: all 0.25s;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+      }
+      .logistic-opt:hover {
+        background: rgba(0, 198, 224, 0.08);
+        border-color: rgba(0, 198, 224, 0.25);
+      }
+      .logistic-opt.selected {
+        background: rgba(0, 106, 255, 0.15);
+        border-color: var(--water);
+      }
+      .logistic-icon {
+        font-size: 22px;
+        margin-bottom: 4px;
+      }
+      .logistic-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .logistic-desc {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+        line-height: 1.4;
+      }
+      .logistic-price-tag {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--cyan);
+      }
+      .logistic-badge {
+        font-size: 10px;
+        padding: 2px 10px;
+        border-radius: var(--r3);
+        background: rgba(0, 198, 224, 0.15);
+        color: var(--cyan);
+        letter-spacing: 0.5px;
+        font-weight: 600;
+      }
+      .waiting-card {
+        background: rgba(245, 158, 11, 0.08);
+        border: 1px solid rgba(245, 158, 11, 0.25);
+        border-radius: var(--r2);
+        padding: 2.5rem;
+        text-align: center;
+        display: none;
+      }
+      .waiting-card.show {
+        display: block;
+        animation: fadeUp 0.4s ease;
+      }
+      .wait-pulse {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(245, 158, 11, 0.15);
+        border: 2px solid rgba(245, 158, 11, 0.35);
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        animation: pulseWarn 2s ease-in-out infinite;
+      }
+      @keyframes pulseWarn {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 0 20px rgba(245, 158, 11, 0);
+        }
+      }
+      .wait-title {
+        font-family: "Syne", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        color: var(--warn);
+      }
+      .wait-sub {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+      }
+      .wait-id {
+        display: inline-block;
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: var(--r);
+        padding: 8px 24px;
+        font-family: "Syne", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--warn);
+        letter-spacing: 1px;
+      }
+      .payment-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--r2);
+        padding: 2.5rem;
+        display: none;
+      }
+      .payment-card.show {
+        display: block;
+        animation: fadeUp 0.4s ease;
+      }
+      .pay-summary {
+        background: rgba(0, 198, 224, 0.05);
+        border: 1px solid rgba(0, 198, 224, 0.15);
+        border-radius: var(--r);
+        padding: 1.25rem;
+        margin-bottom: 2rem;
+      }
+      .pay-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        font-size: 0.9rem;
+      }
+      .pay-row:not(:last-child) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .pay-row .lbl {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .pay-row .val {
+        font-weight: 500;
+      }
+      .pay-row.total {
+        padding-top: 12px;
+        margin-top: 4px;
+      }
+      .pay-row.total .lbl {
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .pay-row.total .val {
+        font-family: "Syne", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: var(--cyan);
+      }
+      .pay-methods {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .pay-method {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1.5px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--r);
+        padding: 1rem;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.25s;
+      }
+      .pay-method:hover {
+        border-color: rgba(0, 198, 224, 0.3);
+      }
+      .pay-method.selected {
+        border-color: var(--cyan);
+        background: rgba(0, 198, 224, 0.12);
+      }
+      .pay-method-icon {
+        font-size: 1.5rem;
+        margin-bottom: 4px;
+      }
+      .pay-method-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      .success-card {
+        background: rgba(0, 184, 122, 0.06);
+        border: 1px solid rgba(0, 184, 122, 0.25);
+        border-radius: var(--r2);
+        padding: 3rem 2rem;
+        text-align: center;
+        display: none;
+      }
+      .success-card.show {
+        display: block;
+        animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      @keyframes pop {
+        0% {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .success-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(0, 184, 122, 0.15);
+        border: 2px solid rgba(0, 184, 122, 0.4);
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+      }
+      .success-title {
+        font-family: "Syne", sans-serif;
+        font-size: 1.6rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+        color: var(--success);
+      }
+      .success-sub {
+        color: rgba(255, 255, 255, 0.5);
+        line-height: 1.7;
+        margin-bottom: 2rem;
+      }
+      .txn-id {
+        display: inline-block;
+        background: rgba(0, 184, 122, 0.1);
+        border: 1px solid rgba(0, 184, 122, 0.3);
+        border-radius: var(--r);
+        padding: 10px 28px;
+        font-family: "Syne", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--success);
+        letter-spacing: 2px;
+      }
+      .history-section {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: var(--r2);
+        padding: 2rem;
+        display: none;
+        overflow-x: auto;
+      }
+      .history-section.show {
+        display: block;
+        animation: fadeUp 0.4s ease;
+      }
+      .history-title {
+        font-family: "Syne", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .htable {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 6px;
+        font-size: 0.85rem;
+        min-width: 600px;
+      }
+      .htable th {
+        color: rgba(255, 255, 255, 0.35);
+        font-weight: 500;
+        text-align: left;
+        padding: 8px 12px;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .htable td {
+        padding: 10px 12px;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .htable tbody tr {
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .htable tbody tr td:first-child {
+        border-radius: var(--r) 0 0 var(--r);
+      }
+      .htable tbody tr td:last-child {
+        border-radius: 0 var(--r) var(--r) 0;
+      }
+      .status-pill {
+        display: inline-block;
+        padding: 3px 12px;
+        border-radius: var(--r3);
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .status-pill.lunas {
+        background: rgba(0, 184, 122, 0.15);
+        color: var(--success);
+      }
+      .status-pill.menunggu {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warn);
+      }
+      .topnav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 1rem 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(
+          to bottom,
+          rgba(6, 12, 31, 0.95),
+          transparent
+        );
+        transition: background 0.3s;
+      }
+      .topnav.solid {
+        background: rgba(6, 12, 31, 0.98);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .nav-logo {
+        font-family: "Syne", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .nav-logo-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 10px var(--cyan);
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+      .nav-link {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.5);
+        text-decoration: none;
+        transition: color 0.2s;
+        cursor: pointer;
+      }
+      .nav-link:hover {
+        color: #fff;
+      }
+      .nav-cta {
+        padding: 8px 20px;
+        border-radius: var(--r3);
+        background: rgba(0, 198, 224, 0.12);
+        border: 1px solid rgba(0, 198, 224, 0.25);
+        color: var(--cyan);
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .admin-nav-btn {
+        padding: 8px 18px;
+        border-radius: var(--r3);
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #f87171;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        letter-spacing: 0.5px;
+      }
+      .admin-nav-btn:hover {
+        background: rgba(239, 68, 68, 0.22);
+      }
+      .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .btn-back {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: var(--r3);
+        padding: 10px 22px;
+        color: rgba(255, 255, 255, 0.5);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.875rem;
+        cursor: pointer;
+      }
+      .btn-next {
+        background: linear-gradient(135deg, var(--water), var(--cyan2));
+        border: none;
+        border-radius: var(--r3);
+        padding: 12px 30px;
+        color: #fff;
+        font-family: "Syne", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .btn-next:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 106, 255, 0.4);
+      }
+      .footband {
+        background: #040812;
+        padding: 2rem;
+        text-align: center;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.2);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 0.9rem;
+      }
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 999;
+        padding: 14px 22px;
+        border-radius: var(--r);
+        font-size: 0.875rem;
+        font-weight: 600;
+        animation: toastIn 0.3s ease;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        display: none;
+      }
+      .toast.show {
+        display: block;
+      }
+      .toast.success {
+        background: rgba(0, 184, 122, 0.95);
+        color: #fff;
+      }
+      .toast.error {
+        background: rgba(239, 68, 68, 0.95);
+        color: #fff;
+      }
+      .toast.info {
+        background: rgba(0, 106, 255, 0.95);
+        color: #fff;
+      }
+      @keyframes toastIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @media (max-width: 600px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .logistic-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero-stats {
+          gap: 1.5rem;
+        }
+        .action-panel {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .nav-links {
+          gap: 0.75rem;
+        }
+        .admin-nav-btn span {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toast" id="toast"></div>
+    <nav class="topnav" id="topnav">
+      <div class="nav-logo">
+        <div class="nav-logo-dot"></div>
+        CucianUNP
+      </div>
+      <div class="nav-links">
+        <span class="nav-link" onclick="scrollTo(0, 0)">Beranda</span>
+        <span
+          class="nav-link"
+          onclick="
+            document
+              .getElementById('pricing')
+              .scrollIntoView({ behavior: 'smooth' })
+          "
+          >Harga</span
+        >
+        <span
+          class="nav-link"
+          onclick="
+            document
+              .getElementById('action')
+              .scrollIntoView({ behavior: 'smooth' })
+          "
+          >Pesan</span
+        >
+        <div
+          class="nav-cta"
+          onclick="
+            document
+              .getElementById('action')
+              .scrollIntoView({ behavior: 'smooth' })
+          "
+        >
+          Mulai Sekarang
+        </div>
+        <!-- DIUBAH: Mengarah ke halaman login admin -->
+        <button
+          class="admin-nav-btn"
+          onclick="window.location.href = 'admin.html'"
+        >
+          🛡️ <span>Admin</span>
+        </button>
+      </div>
+    </nav>
+    <section class="hero">
+      <div class="hero-bg">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+      </div>
+      <div class="water-wave"></div>
+      <div class="logo-badge">
+        <div class="logo-badge-dot"></div>
+        <span>Sistem Cuci Kendaraan Digital</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="line1">Bersih, Cepat,</span
+        ><span class="line2">CucianUNP</span>
+      </h1>
+      <p class="hero-sub">
+        Layanan cuci kendaraan premium dengan sistem manajemen modern — motor &
+        mobil, antar jemput, langsung ke tangan Anda.
+      </p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">500+</div>
+          <div class="hero-stat-lbl">Pelanggan</div>
+        </div>
+        <div class="stat-div"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">2 Tipe</div>
+          <div class="hero-stat-lbl">Kendaraan</div>
+        </div>
+        <div class="stat-div"></div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">4 Layanan</div>
+          <div class="hero-stat-lbl">Logistik</div>
+        </div>
+      </div>
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-arrow"></div>
+      </div>
+    </section>
+    <section class="features">
+      <div class="section-label">Keunggulan Kami</div>
+      <h2 class="section-title">Kenapa Pilih CucianUNP?</h2>
+      <p class="section-sub">
+        Sistem terintegrasi dari pemesanan, konfirmasi admin, hingga pembayaran
+        — semua dalam satu platform.
+      </p>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-icon">🚗</div>
+          <div class="feat-title">Multi Kendaraan</div>
+          <div class="feat-desc">
+            Melayani motor (Rp 15.000) dan mobil (Rp 50.000) dengan tarif
+            transparan.
+          </div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🚚</div>
+          <div class="feat-title">Layanan Antar Jemput</div>
+          <div class="feat-desc">
+            Pilih Jemput, Antar, Antar Jemput, atau langsung datang.
+          </div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">✅</div>
+          <div class="feat-title">Konfirmasi Admin</div>
+          <div class="feat-desc">
+            Setiap pesanan dikonfirmasi admin sebelum diproses.
+          </div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">💳</div>
+          <div class="feat-title">Pembayaran Fleksibel</div>
+          <div class="feat-desc">
+            Bayar tunai (CASH) atau scan kode digital (QRIS).
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="pricing" id="pricing">
+      <div class="section-label">Tarif Layanan</div>
+      <h2 class="section-title">Harga Transparan</h2>
+      <div class="price-grid">
+        <div class="price-card">
+          <div class="price-badge">Motor</div>
+          <div class="price-type">Cuci Motor</div>
+          <div class="price-amount">Rp 15.000 <span>/ kendaraan</span></div>
+          <ul class="price-items">
+            <li>Cuci bersih menyeluruh</li>
+            <li>Bisa antar/jemput tambahan</li>
+          </ul>
+        </div>
+        <div class="price-card featured">
+          <div class="price-badge">Mobil</div>
+          <div class="price-type">Cuci Mobil</div>
+          <div class="price-amount">Rp 50.000 <span>/ kendaraan</span></div>
+          <ul class="price-items">
+            <li>Cuci eksterior lengkap</li>
+            <li>Prioritas antrian</li>
+          </ul>
+        </div>
+        <div class="price-card">
+          <div class="price-badge">Logistik</div>
+          <div class="price-type">Tarif Logistik</div>
+          <div class="price-amount">Rp 10.000 <span>/ layanan</span></div>
+          <ul class="price-items">
+            <li>Jemput: Rp 10.000</li>
+            <li>Antar: Rp 10.000</li>
+            <li>Antar Jemput: Rp 20.000</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="action-strip" id="action">
+      <div class="action-panel">
+        <div class="action-left">
+          <div class="action-label">Panel Operasional</div>
+          <div class="action-title">Mulai Transaksi atau Cek Pesanan</div>
+        </div>
+        <div class="action-right">
+          <div class="mode-toggle">
+            <button
+              class="mode-btn active"
+              id="btnBuat"
+              onclick="setMode('buat')"
+            >
+              🛒 Buat Pesanan
+            </button>
+            <button class="mode-btn" id="btnCek" onclick="setMode('cek')">
+              🔍 Cek Pesanan
+            </button>
+          </div>
+          <button class="cta-btn" id="mainCta" onclick="mainAction()">
+            Buat Pesanan →
+          </button>
+          <div class="id-input-wrap" id="idWrap">
+            <input
+              class="id-input"
+              id="idInput"
+              placeholder="Masukkan ID pelanggan..."
+            />
+            <button class="id-go" onclick="cekPesanan()">→</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="form-section" id="formSection" style="display: none">
+      <div class="form-shell">
+        <div class="step-track" id="stepTrack">
+          <div class="step-dot active" id="step1dot">
+            <div class="step-circle" id="sc1">1</div>
+            <div class="step-label">Pelanggan</div>
+          </div>
+          <div class="step-dot" id="step2dot">
+            <div class="step-circle" id="sc2">2</div>
+            <div class="step-label">Kendaraan</div>
+          </div>
+          <div class="step-dot" id="step3dot">
+            <div class="step-circle" id="sc3">3</div>
+            <div class="step-label">Logistik</div>
+          </div>
+          <div class="step-dot" id="step4dot">
+            <div class="step-circle" id="sc4">4</div>
+            <div class="step-label">Konfirmasi</div>
+          </div>
+          <div class="step-dot" id="step5dot">
+            <div class="step-circle" id="sc5">5</div>
+            <div class="step-label">Pembayaran</div>
+          </div>
+        </div>
+        <!-- Step 1: Pelanggan -->
+        <div class="form-card active" id="card1">
+          <div class="form-card-title">
+            <div class="form-card-title-icon">👤</div>
+            Data Pelanggan
+          </div>
+          <div class="form-card-sub">
+            Isi data diri dan plat nomor kendaraan Anda
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Nama Lengkap</label
+              ><input
+                class="form-input"
+                id="f_nama"
+                placeholder="Nama pelanggan"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nomor WhatsApp</label
+              ><input class="form-input" id="f_wa" placeholder="08xxxxxxxxxx" />
+            </div>
+            <div class="form-group form-grid single">
+              <label class="form-label">Plat Nomor Kendaraan</label>
+              <input
+                class="form-input"
+                id="f_plat1"
+                placeholder="BA 1234 AB"
+                style="text-transform: uppercase"
+              />
+            </div>
+          </div>
+          <div class="form-actions">
+            <span></span
+            ><button class="btn-next" onclick="goStep(2)">
+              Lanjut ke Kendaraan →
+            </button>
+          </div>
+        </div>
+        <!-- Step 2: Kendaraan (DIPERBAIKI: Plat nomor tidak perlu diisi lagi) -->
+        <div class="form-card" id="card2">
+          <div class="form-card-title">
+            <div class="form-card-title-icon">🚗</div>
+            Data Kendaraan
+          </div>
+          <div class="form-card-sub">
+            Lengkapi detail model dan jenis kendaraan
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Plat Nomor (Terverifikasi)</label>
+              <!-- DIUBAH: Menampilkan plat dari step 1, bukan input -->
+              <div
+                class="id-display"
+                id="display_plat"
+                style="
+                  background: rgba(255, 255, 255, 0.05);
+                  color: rgba(255, 255, 255, 0.7);
+                  border-color: rgba(255, 255, 255, 0.1);
+                "
+              >
+                -
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Model</label>
+              <input
+                class="form-input"
+                id="f_model"
+                placeholder="Honda Beat / Avanza..."
+              />
+            </div>
+            <div class="form-group form-grid single">
+              <label class="form-label">Jenis Kendaraan</label>
+              <select class="form-input" id="f_jenis">
+                <option value="">-- Pilih Jenis --</option>
+                <option value="Motor">Motor (Rp 15.000)</option>
+                <option value="Mobil">Mobil (Rp 50.000)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-back" onclick="goStep(1)">← Kembali</button>
+            <button class="btn-next" onclick="goStep(3)">
+              Lanjut ke Logistik →
+            </button>
+          </div>
+        </div>
+        <!-- Step 3: Logistik -->
+        <div class="form-card" id="card3">
+          <div class="form-card-title">
+            <div class="form-card-title-icon">🚚</div>
+            Pilihan Logistik
+          </div>
+          <div class="form-card-sub">
+            Pilih layanan pengiriman atau datang langsung
+          </div>
+          <div class="logistic-grid">
+            <div
+              class="logistic-opt"
+              id="lo1"
+              onclick="selectLogistic('Jemput', this)"
+            >
+              <div class="logistic-icon">📦</div>
+              <div class="logistic-name">Jemput</div>
+              <div class="logistic-desc">Dijemput ke lokasi Anda</div>
+              <div class="logistic-price-tag">Rp 10.000</div>
+            </div>
+            <div
+              class="logistic-opt"
+              id="lo2"
+              onclick="selectLogistic('Antar', this)"
+            >
+              <div class="logistic-icon">🚛</div>
+              <div class="logistic-name">Antar</div>
+              <div class="logistic-desc">Diantar kembali setelah selesai</div>
+              <div class="logistic-price-tag">Rp 10.000</div>
+            </div>
+            <div
+              class="logistic-opt"
+              id="lo3"
+              onclick="selectLogistic('Antar Jemput', this)"
+            >
+              <div class="logistic-icon">🔄</div>
+              <div class="logistic-name">Antar Jemput</div>
+              <div class="logistic-desc">Bundling hemat jemput + antar</div>
+              <div class="logistic-price-tag">Rp 20.000</div>
+            </div>
+            <div
+              class="logistic-opt"
+              id="lo4"
+              onclick="selectLogistic('Langsung', this)"
+            >
+              <div class="logistic-icon">🏪</div>
+              <div class="logistic-name">Datang Langsung</div>
+              <div class="logistic-desc">Antar dan ambil sendiri</div>
+              <div
+                class="logistic-price-tag"
+                style="color: rgba(255, 255, 255, 0.4)"
+              >
+                Gratis
+              </div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-back" onclick="goStep(2)">← Kembali</button>
+            <button
+              class="btn-next"
+              id="btnLanjutLogistik"
+              onclick="submitOrder()"
+              disabled
+              style="opacity: 0.4; cursor: not-allowed"
+            >
+              Kirim Pesanan →
+            </button>
+          </div>
+        </div>
+        <!-- Step 4: Menunggu -->
+        <div class="waiting-card" id="card4">
+          <div class="wait-pulse">⏳</div>
+          <div class="wait-title">Menunggu Konfirmasi Admin</div>
+          <div class="wait-sub">
+            Pesanan Anda sedang diverifikasi oleh admin kami.
+          </div>
+          <div class="wait-id" id="waitTxnId">TXN-...</div>
+          <div style="margin-top: 1.5rem">
+            <button
+              class="btn-next"
+              onclick="checkConfirmation()"
+              id="btnCheckConfirm"
+            >
+              🔄 Cek Status Konfirmasi
+            </button>
+          </div>
+        </div>
+        <!-- Step 5: Pembayaran -->
+        <div class="payment-card" id="card5">
+          <div class="form-card-title">
+            <div class="form-card-title-icon">💳</div>
+            Pembayaran
+          </div>
+          <div class="pay-summary" id="paySummary">
+            <div class="pay-row">
+              <span class="lbl">Layanan Cuci</span
+              ><span class="val" id="payBiayaCuci">—</span>
+            </div>
+            <div class="pay-row">
+              <span class="lbl">Biaya Logistik</span
+              ><span class="val" id="payBiayaLogistik">—</span>
+            </div>
+            <div class="pay-row total">
+              <span class="lbl">Total Bayar</span
+              ><span class="val" id="payTotal">—</span>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom: 1.5rem">
+            <label class="form-label">Metode Pembayaran</label>
+            <div class="pay-methods">
+              <div
+                class="pay-method"
+                id="pm1"
+                onclick="selectPayment('CASH', this)"
+              >
+                <div class="pay-method-icon">💵</div>
+                <div class="pay-method-name">CASH</div>
+              </div>
+              <div
+                class="pay-method"
+                id="pm2"
+                onclick="selectPayment('QRIS', this)"
+              >
+                <div class="pay-method-icon">📱</div>
+                <div class="pay-method-name">QRIS</div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="form-actions"
+            style="border-top: none; margin-top: 0; padding-top: 0"
+          >
+            <span></span
+            ><button
+              class="btn-next"
+              onclick="finishTransaction()"
+              id="btnBayar"
+              disabled
+              style="opacity: 0.4; cursor: not-allowed"
+            >
+              Konfirmasi Pembayaran 💳
+            </button>
+          </div>
+        </div>
+        <!-- Success -->
+        <div class="success-card" id="successCard">
+          <div class="success-icon">✅</div>
+          <div class="success-title">Transaksi Selesai!</div>
+          <div class="success-sub">
+            Terima kasih telah menggunakan layanan CucianUNP.
+          </div>
+          <div class="txn-id" id="finalTxnId">TXN-...</div>
+          <div
+            style="
+              margin-top: 2rem;
+              display: flex;
+              gap: 1rem;
+              justify-content: center;
+              flex-wrap: wrap;
+            "
+          >
+            <button class="btn-next" onclick="resetAll()">
+              Buat Pesanan Baru
+            </button>
+            <button class="btn-back" onclick="lihatRiwayat()">
+              Lihat Riwayat
+            </button>
+          </div>
+        </div>
+        <!-- History -->
+        <div class="history-section" id="historySection">
+          <div class="history-title">📋 Riwayat Transaksi</div>
+          <table class="htable">
+            <thead>
+              <tr>
+                <th>ID Transaksi</th>
+                <th>Pelanggan</th>
+                <th>Tanggal</th>
+                <th>Kendaraan</th>
+                <th>Logistik</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <div class="footband">
+      © 2024 CucianUNP — Sistem Manajemen Cuci Kendaraan
+    </div>
+    <script>
+      const API = "http://localhost:3003/api";
+      let currentMode = "buat",
+        selectedLogistic = null,
+        selectedPayment = null,
+        currentStep = 1;
+      let state = { id_pelanggan: null, id_transaksi: null, total_bayar: 0 };
+      function showToast(msg, type = "success", ms = 2800) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = `toast show ${type}`;
+        setTimeout(() => {
+          t.classList.remove("show");
+        }, ms);
+      }
+      window.addEventListener("scroll", () => {
+        document
+          .getElementById("topnav")
+          .classList.toggle("solid", window.scrollY > 60);
+      });
+      function setMode(m) {
+        currentMode = m;
+        document
+          .getElementById("btnBuat")
+          .classList.toggle("active", m === "buat");
+        document
+          .getElementById("btnCek")
+          .classList.toggle("active", m === "cek");
+        document.getElementById("mainCta").style.display =
+          m === "buat" ? "" : "none";
+        document.getElementById("idWrap").classList.toggle("show", m === "cek");
+      }
+      function mainAction() {
+        document.getElementById("formSection").style.display = "flex";
+        setTimeout(
+          () =>
+            document
+              .getElementById("formSection")
+              .scrollIntoView({ behavior: "smooth" }),
+          100,
+        );
+        resetAll();
+      }
+      async function cekPesanan() {
+        const id = document.getElementById("idInput").value.trim();
+        if (!id) {
+          showToast("Masukkan ID pelanggan.", "error");
+          return;
+        }
+        document.getElementById("formSection").style.display = "flex";
+        setTimeout(
+          () =>
+            document
+              .getElementById("formSection")
+              .scrollIntoView({ behavior: "smooth" }),
+          100,
+        );
+        state.id_pelanggan = id;
+        await lihatRiwayat();
+      }
+      async function lihatRiwayat() {
+        if (!state.id_pelanggan) return;
+        hideAll();
+        document.getElementById("historySection").classList.add("show");
+        document.getElementById("stepTrack").style.display = "none";
+        const body = document.getElementById("historyBody");
+        body.innerHTML = `<tr><td colspan="7" class="empty-state">Memuat data...</td></tr>`;
+        try {
+          const res = await fetch(`${API}/cek-pesanan/${state.id_pelanggan}`);
+          if (!res.ok) throw new Error("Pelanggan tidak ditemukan");
+          const data = await res.json();
+          const transactions = Array.isArray(data) ? data : [data];
+          if (transactions.length === 0 || !transactions[0].id_transaksi) {
+            body.innerHTML = `<tr><td colspan="7" class="empty-state">Tidak ada riwayat.</td></tr>`;
+          } else {
+            body.innerHTML = transactions
+              .map(
+                (t) => `
+<tr><td style="font-family:monospace;color:var(--cyan)">${t.id_transaksi}</td><td>${t.id_pelanggan}<br><span style="color:rgba(255,255,255,0.4)">${t.nama || ""}</span></td><td>${t.tanggal || "-"}</td><td>${t.jenis || "-"} ${t.plat || ""}</td><td>${t.logistik || "Langsung"}</td><td>Rp ${(t.total_bayar || 0).toLocaleString("id-ID")}</td><td><span class="status-pill ${t.status === "Selesai" || t.status === "Lunas" ? "lunas" : "menunggu"}">${t.status}</span></td></tr>`,
+              )
+              .join("");
+          }
+        } catch (err) {
+          body.innerHTML = `<tr><td colspan="7" class="empty-state">Gagal memuat: ${err.message}</td></tr>`;
+        }
+      }
+      function goStep(s) {
+        hideAll();
+        currentStep = s;
+        updateStepTrack(s);
+        document.getElementById("stepTrack").style.display = "flex";
+        if (s === 1) document.getElementById("card1").classList.add("active");
+        else if (s === 2) {
+          document.getElementById("card2").classList.add("active");
+          // DIPERBAIKI: Tampilkan plat nomor dari step 1
+          const plat = document.getElementById("f_plat1").value.toUpperCase();
+          document.getElementById("display_plat").textContent =
+            plat || "Belum diisi";
+        } else if (s === 3)
+          document.getElementById("card3").classList.add("active");
+        else if (s === 4)
+          document.getElementById("card4").classList.add("show");
+        else if (s === 5) {
+          updatePaySummary();
+          document.getElementById("card5").classList.add("show");
+        }
+      }
+      function hideAll() {
+        [
+          "card1",
+          "card2",
+          "card3",
+          "card4",
+          "card5",
+          "successCard",
+          "historySection",
+        ].forEach((id) =>
+          document.getElementById(id).classList.remove("active", "show"),
+        );
+      }
+      function updateStepTrack(s) {
+        for (let i = 1; i <= 5; i++) {
+          const dot = document.getElementById("step" + i + "dot");
+          dot.classList.remove("active", "done");
+          document.getElementById("sc" + i).textContent = i < s ? "✓" : i;
+          if (i < s) dot.classList.add("done");
+          else if (i === s) dot.classList.add("active");
+        }
+      }
+      function getLogisticPrice(l) {
+        if (l === "Jemput" || l === "Antar") return 10000;
+        if (l === "Antar Jemput") return 20000;
+        return 0;
+      }
+      function selectLogistic(l, el) {
+        selectedLogistic = l;
+        document
+          .querySelectorAll(".logistic-opt")
+          .forEach((e) => e.classList.remove("selected"));
+        el.classList.add("selected");
+        const btn = document.getElementById("btnLanjutLogistik");
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        btn.style.cursor = "pointer";
+      }
+      async function submitOrder() {
+        if (!selectedLogistic) {
+          showToast("Pilih logistik.", "error");
+          return;
+        }
+        const nama = document.getElementById("f_nama").value.trim();
+        const wa = document.getElementById("f_wa").value.trim();
+        const plat = document
+          .getElementById("f_plat1")
+          .value.trim()
+          .toUpperCase(); // DIAMBIL DARI STEP 1
+        const model = document.getElementById("f_model").value.trim();
+        const jenis = document.getElementById("f_jenis").value;
+        if (!nama || !wa || !plat || !model || !jenis) {
+          showToast("Lengkapi semua data.", "error");
+          return;
+        }
+        const btn = document.getElementById("btnLanjutLogistik");
+        btn.disabled = true;
+        btn.innerHTML = "⏳ Mengirim...";
+        try {
+          let logistikPayload =
+            selectedLogistic === "Langsung" ? null : selectedLogistic;
+          const res = await fetch(`${API}/buat-pesanan`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              nama,
+              wa,
+              plat,
+              model,
+              jenis,
+              logistik: logistikPayload,
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Gagal membuat pesanan");
+          state.id_pelanggan = data.id_pelanggan;
+          state.id_transaksi = data.id_transaksi;
+          state.total_bayar = data.total_bayar;
+          document.getElementById("waitTxnId").textContent = data.id_transaksi;
+          showToast("Pesanan terkirim!", "success");
+          goStep(4);
+        } catch (err) {
+          showToast(err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = "Kirim Pesanan →";
+        }
+      }
+      async function checkConfirmation() {
+        if (!state.id_transaksi) return;
+        const btn = document.getElementById("btnCheckConfirm");
+        btn.disabled = true;
+        btn.innerHTML = "🔄 Mengecek...";
+        try {
+          const res = await fetch(`${API}/cek-status/${state.id_transaksi}`);
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error);
+          if (data.status === "Dikonfirmasi") {
+            showToast("Admin mengonfirmasi!", "success");
+            goStep(5);
+          } else {
+            showToast(`Status: ${data.status}`, "info", 4000);
+          }
+        } catch (err) {
+          showToast(err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = "🔄 Cek Status Konfirmasi";
+        }
+      }
+      function selectPayment(p, el) {
+        selectedPayment = p;
+        document
+          .querySelectorAll(".pay-method")
+          .forEach((e) => e.classList.remove("selected"));
+        el.classList.add("selected");
+        const btn = document.getElementById("btnBayar");
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        btn.style.cursor = "pointer";
+      }
+      function updatePaySummary() {
+        if (state.total_bayar) {
+          document.getElementById("payTotal").textContent =
+            "Rp " + state.total_bayar.toLocaleString("id-ID");
+          document.getElementById("payBiayaCuci").textContent = "Sesuai Jenis";
+          document.getElementById("payBiayaLogistik").textContent =
+            selectedLogistic === "Langsung" ? "Gratis" : "Sesuai Layanan";
+        }
+      }
+      async function finishTransaction() {
+        if (!selectedPayment || !state.id_transaksi) {
+          showToast("Data tidak valid.", "error");
+          return;
+        }
+        const btn = document.getElementById("btnBayar");
+        btn.disabled = true;
+        btn.innerHTML = "⏳ Memproses...";
+        try {
+          const res = await fetch(`${API}/bayar`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              id_transaksi: state.id_transaksi,
+              id_pelanggan: state.id_pelanggan,
+              metode: selectedPayment,
+              total_bayar: state.total_bayar,
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error);
+          document.getElementById("finalTxnId").textContent =
+            state.id_transaksi;
+          hideAll();
+          document.getElementById("stepTrack").style.display = "none";
+          document.getElementById("successCard").classList.add("show");
+          showToast("Transaksi berhasil!", "success");
+        } catch (err) {
+          showToast(err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = "Konfirmasi Pembayaran 💳";
+        }
+      }
+      function resetAll() {
+        hideAll();
+        currentStep = 1;
+        selectedLogistic = null;
+        selectedPayment = null;
+        state = { id_pelanggan: null, id_transaksi: null, total_bayar: 0 };
+        ["f_nama", "f_wa", "f_plat1", "f_model"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("f_jenis").value = "";
+        document.getElementById("display_plat").textContent = "-";
+        document.getElementById("card1").classList.add("active");
+        document.getElementById("stepTrack").style.display = "flex";
+        updateStepTrack(1);
+        document
+          .querySelectorAll(".logistic-opt, .pay-method")
+          .forEach((e) => e.classList.remove("selected"));
+        const bl = document.getElementById("btnLanjutLogistik");
+        bl.disabled = true;
+        bl.style.opacity = "0.4";
+        const bb = document.getElementById("btnBayar");
+        bb.disabled = true;
+        bb.style.opacity = "0.4";
+      }
+    </script>
+  </body>
+</html>
